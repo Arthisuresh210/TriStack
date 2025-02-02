@@ -1,0 +1,79 @@
+pipeline{
+    agent any
+    tools{
+        jdk 'jdk17'
+        nodejs 'node16'
+    }
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner'
+    }
+    stages {
+        stage('Checkout from Git'){
+            steps{
+                git branch: 'main', url: 'https://github.com/Sai-Chakradhar-Mahendrakar/Elearning-Platform-Using-MERN.git'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+        stage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=docker-compose \
+                    -Dsonar.projectKey=docker-compose '''
+                }
+            }
+        }
+        stage("quality gate"){
+           steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
+                }
+            }
+        }
+        stage('OWASP FS SCAN') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.json"
+            }
+        }
+          // Docker Compose Build Stage with Timeout
+        stage('Docker-compose Build') {
+            steps {
+                script {
+                    timeout(time: 1, unit: 'MINUTES') { // Timeout set to 1 minute
+                        sh 'docker-compose up -d'
+                    }
+                }
+            }
+        }
+
+        stage('Docker-compose Push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                        // Tag and push backend and frontend images
+                        sh "docker tag arthisuresh0210157/elearning-platform-using-mern-backend:latest"
+                        sh "docker tag arthisuresh0210157/elearning-platform-using-mern-frontend:latest"
+                        
+                        sh "docker push arthisuresh0210157/elearning-platform-using-mern-backend:latest"
+                        sh "docker push arthisuresh0210157/elearning-platform-using-mern-frontend:latest"
+                    }
+                }
+            }
+        }
+        stage("TRIVY"){
+            steps{
+                sh "trivy image arthisuresh0210157/elearning-platform-using-mern-backend > trivy.json"
+                sh "trivy image arthisuresh0210157/elearning-platform-using-mern-frontend > trivy.json"
+            }
+        }
+    }
+}
