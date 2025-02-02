@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elearning-platform
+ namespace: default
+  labels:
+    app: elearning-platform
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: elearning-platform
+  template:
+    metadata:
+      labels:
+        app: elearning-platform
+    spec:
+      containers:
+      - name: frontend
+        image: arthisuresh0210157/elearning-platform-using-mern-frontend:latest
+        ports:
+        - containerPort: 3000
+      - name: backend
+        image: arthisuresh0210157/elearning-platform-using-mern-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URI
+          value: “mongodb://mongo:27017/elearning"
+        - name: NODE_ENV
+          value: "production"
+
