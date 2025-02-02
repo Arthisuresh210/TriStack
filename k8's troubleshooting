@@ -1,0 +1,7 @@
+If the cluster give error like The connection to the server 172.31.15.154:6443 was refused - did you specify the right host or port?
+In MASTER-NODE:
+$ kubeadm reset -f
+$ kubeadm init --pod-network-cidr=10.244.0.0/16
+In WORKER-NODE:
+ $ sudo kubeadm reset -f
+ After this again repeat the successful initialization steps.
