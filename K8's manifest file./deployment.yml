@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: elearning-platform
+ name: elearning-platform
  namespace: default
   labels:
     app: elearning-platform
