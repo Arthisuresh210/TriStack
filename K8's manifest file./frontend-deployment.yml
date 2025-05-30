@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elearning-frontend
+  labels:
+    app: elearning-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: elearning-frontend
+  template:
+    metadata:
+      labels:
+        app: elearning-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: arthisuresh0210157/elearning-platform-using-mern-frontend:latest
+        ports:
+        - containerPort: 80
