@@ -5,7 +5,7 @@ metadata:
   labels:
     app: elearning-frontend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: elearning-frontend
