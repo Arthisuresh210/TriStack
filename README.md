@@ -1,28 +1,45 @@
-# TriStack
-### **Deployment of a Three-Tier Web Application with Docker Compose, Kubernetes, Jenkins, SonarQube, Grafana, and Prometheus on EC2**  
+## **TriStack**
 
-This project focuses on deploying a **three-tier web application** on an **AWS EC2 instance** using **Docker Compose** and later migrating to **Kubernetes**. The architecture consists of a **frontend**, a **backend**, and a **database**, ensuring modularity, scalability, and observability.  
+### **Deployment of a Three-Tier Web Application on Kubernetes Cluster on EC2 with Jenkins, SonarQube, Helm, Prometheus, and Grafana**
 
-### **Technology Stack and Workflow**  
-Initially, **Docker Compose** is used to containerize and manage the multi-container application. The **backend** processes user requests and interacts with the **database**, while the **frontend** provides the user interface. Once the application runs successfully in Docker, it is migrated to **Kubernetes**, where each component runs as a separate pod. **Kubernetes Services** manage communication.
+**TriStack** is a cloud-native project that demonstrates the deployment of a **three-tier web application**—comprising a **frontend, backend, and database**—on a **Kubernetes cluster hosted on AWS EC2** instances. The project focuses on **modular architecture, automated CI/CD**, and **observability at the infrastructure level**.
 
-### **CI/CD Integration with Jenkins and SonarQube**  
-To automate application deployment, **Jenkins** is introduced for continuous integration and delivery (CI/CD). It pulls the latest code from the repository, builds Docker images, and deploys them to **Kubernetes**. **SonarQube** is integrated into the Jenkins pipeline for **static code analysis**, ensuring security, code quality, and maintainability.  
+### **Technology Stack and Deployment Workflow**
 
-The Jenkins pipeline automates:  
-1. **Code fetching from GitHub/GitLab**  
-2. **Static code analysis using SonarQube**  
-3. **Building and pushing Docker images to a container registry (ECR/Docker Hub)**  
-4. **Deploying updated images to Kubernetes**  
+* The application was containerized using Docker and then deployed to a Kubernetes cluster.
+* Each component—frontend, backend, and database—runs in its own pod with corresponding services for internal communication.
+* The Kubernetes cluster was created manually on EC2, allowing flexibility in infrastructure management.
 
-### **Monitoring with Prometheus and Grafana**  
-To enhance **observability**, **Prometheus** is deployed to collect and store application and infrastructure metrics. The backend API, database, and Kubernetes nodes expose metrics, which Prometheus scrapes periodically.  
+### **CI/CD Integration with Jenkins and SonarQube**
 
-**Grafana** is then used to visualize these metrics with custom dashboards, providing insights into:  
-- **Application health and response times**  
-- **Resource utilization (CPU, memory, disk I/O)**  
-- **Database performance and queries**  
-- **Kubernetes cluster metrics (pod status, node usage, network traffic)**  
+To automate development workflows, a Jenkins pipeline was integrated. The pipeline performs:
 
-### **Final Outcome**  
-This setup results in a **scalable, automated, and observable** cloud-native deployment. **Docker and Kubernetes** ensure portability and orchestration, **Jenkins and SonarQube** automate CI/CD with quality checks, and **Prometheus and Grafana** provide real-time monitoring and alerting, making the system highly reliable and efficient.
+* Cloning source code from GitHub/GitLab
+* Static code analysis using **SonarQube**
+* Building and tagging Docker images
+* Pushing images to a container registry (Docker Hub or ECR)
+* Deploying to the Kubernetes cluster using `kubectl`
+
+This ensures continuous integration and continuous delivery with quality checks included.
+
+### **Monitoring with Prometheus and Grafana (via Helm)**
+
+For observability, **Prometheus** and **Grafana** were deployed using **Helm charts**. These tools were configured for **Kubernetes cluster-level monitoring only**.
+
+* Metrics collected include **node health**, **pod status**, **CPU/memory usage**, and **resource consumption trends**.
+* No application-level scraping was configured.
+* Load was generated using a **Kubernetes Job YAML** to simulate traffic and test system behavior under pressure.
+
+Grafana dashboards were set up to visualize key cluster metrics, helping track resource usage and infrastructure health.
+
+### **Final Outcome**
+
+This setup delivers a **production-like environment** with the following features:
+
+* **Scalability** through Kubernetes
+* **Basic observability** using Helm-based Prometheus and Grafana for infrastructure metrics
+* **Automated deployment** using Jenkins and SonarQube
+* **Load testing capabilities** through Kubernetes Job resources
+
+The project demonstrates how to combine core DevOps tools and practices for managing and observing a distributed application on cloud infrastructure.
+
