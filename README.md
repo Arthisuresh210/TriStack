@@ -40,6 +40,8 @@ This setup delivers a **production-like environment** with the following feature
 * **Basic observability** using Helm-based Prometheus and Grafana for infrastructure metrics
 * **Automated deployment** using Jenkins and SonarQube
 * **Load testing capabilities** through Kubernetes Job resources
+![Screenshot 2025-06-10 222512](https://github.com/user-attachments/assets/44a0a88f-5a7a-4e20-b4a2-66265fa82a89)
+
 
 The project demonstrates how to combine core DevOps tools and practices for managing and observing a distributed application on cloud infrastructure.
 
